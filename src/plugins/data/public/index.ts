@@ -526,3 +526,5 @@ export {
   DataSourceGroup,
   DataSourceOption,
 } from './data_sources/datasource_selector';
+
+import './antlr/opensearch_sql/code_completion';
