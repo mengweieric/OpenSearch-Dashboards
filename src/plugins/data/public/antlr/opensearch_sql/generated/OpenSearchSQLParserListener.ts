@@ -13,6 +13,7 @@ import { DescribeStatementContext } from "./OpenSearchSQLParser.js";
 import { ColumnFilterContext } from "./OpenSearchSQLParser.js";
 import { TableFilterContext } from "./OpenSearchSQLParser.js";
 import { ShowDescribePatternContext } from "./OpenSearchSQLParser.js";
+import { CompatibleIDContext } from "./OpenSearchSQLParser.js";
 import { QuerySpecificationContext } from "./OpenSearchSQLParser.js";
 import { SelectClauseContext } from "./OpenSearchSQLParser.js";
 import { SelectSpecContext } from "./OpenSearchSQLParser.js";
@@ -259,6 +260,16 @@ export class OpenSearchSQLParserListener implements ParseTreeListener {
      * @param ctx the parse tree
      */
     exitShowDescribePattern?: (ctx: ShowDescribePatternContext) => void;
+    /**
+     * Enter a parse tree produced by `OpenSearchSQLParser.compatibleID`.
+     * @param ctx the parse tree
+     */
+    enterCompatibleID?: (ctx: CompatibleIDContext) => void;
+    /**
+     * Exit a parse tree produced by `OpenSearchSQLParser.compatibleID`.
+     * @param ctx the parse tree
+     */
+    exitCompatibleID?: (ctx: CompatibleIDContext) => void;
     /**
      * Enter a parse tree produced by `OpenSearchSQLParser.querySpecification`.
      * @param ctx the parse tree

@@ -114,7 +114,7 @@ const rulesToVisit = new Set([
   OpenSearchSQLParser.RULE_windowFunctionClause,
 ]);
 
-class MySqlSymbolTableVisitor
+class OpenSearchSqlSymbolTableVisitor
   extends OpenSearchSQLParserVisitor<{}>
   implements ISymbolTableVisitor {
   symbolTable: c3.SymbolTable;
@@ -138,27 +138,27 @@ class MySqlSymbolTableVisitor
     return this.visitChildren(context) as {};
   };
 
-  // visitAtomTableItem = (context: TableFilterContext): {} => {
-  //   try {
-  //     const rawAlias = context.uid()?.getText();
-  //     // For some reason LEFT | RIGHT keyword gets confused with alias
-  //     const isAliasPartOfJoinStatement =
-  //       rawAlias?.toLowerCase() === 'left' || rawAlias?.toLowerCase() === 'right';
+  visitAtomTableItem = (context: TableFilterContext): {} => {
+    try {
+      const rawAlias = context.uid()?.getText();
+      // For some reason LEFT | RIGHT keyword gets confused with alias
+      const isAliasPartOfJoinStatement =
+        rawAlias?.toLowerCase() === 'left' || rawAlias?.toLowerCase() === 'right';
 
-  //     this.symbolTable.addNewSymbolOfType(
-  //       TableSymbol,
-  //       this.scope,
-  //       context.tableName().getText(),
-  //       isAliasPartOfJoinStatement ? undefined : rawAlias
-  //     );
-  //   } catch (error) {
-  //     if (!(error instanceof c3.DuplicateSymbolError)) {
-  //       throw error;
-  //     }
-  //   }
+      this.symbolTable.addNewSymbolOfType(
+        TableSymbol,
+        this.scope,
+        context.tableName().getText(),
+        isAliasPartOfJoinStatement ? undefined : rawAlias
+      );
+    } catch (error) {
+      if (!(error instanceof c3.DuplicateSymbolError)) {
+        throw error;
+      }
+    }
 
-  //   return this.visitChildren(context) as {};
-  // };
+    return this.visitChildren(context) as {};
+  };
 
   visitSelectElementAlias = (context: SelectElementsContext): {} => {
     try {
@@ -191,35 +191,39 @@ function processVisitedRules(
   let shouldSuggestColumns = false;
   let shouldSuggestColumnAliases = false;
 
+  console.log('processVisitedRules: ', rules);
+  console.log('OpenSearchSQLParser.RULE_tableName: ', OpenSearchSQLParser.RULE_tableName);
+
   for (const [ruleId, rule] of rules) {
     if (!isStartingToWriteRule(cursorTokenIndex, rule)) {
       continue;
     }
 
     switch (ruleId) {
-      // case OpenSearchSQLParser.RULE_tableName: {
-      //   if (rule.ruleList.includes(OpenSearchSQLParser.RULE_createTable)) {
-      //     break;
-      //   }
+      case OpenSearchSQLParser.RULE_tableName: {
+        // if (rule.ruleList.includes(OpenSearchSQLParser.RULE_createTable)) {
+        //   break;
+        // }
 
-      //   if (
-      //     getPreviousToken(tokenStream, tokenDictionary, cursorTokenIndex, OpenSearchSQLParser.VIEW)
-      //   ) {
-      //     suggestViewsOrTables = TableOrViewSuggestion.VIEWS;
-      //   } else if (
-      //     getPreviousToken(
-      //       tokenStream,
-      //       tokenDictionary,
-      //       cursorTokenIndex,
-      //       OpenSearchSQLParser.TABLE
-      //     )
-      //   ) {
-      //     suggestViewsOrTables = TableOrViewSuggestion.TABLES;
-      //   } else {
-      //     suggestViewsOrTables = TableOrViewSuggestion.ALL;
-      //   }
-      //   break;
-      // }
+        // if (
+        //   getPreviousToken(tokenStream, tokenDictionary, cursorTokenIndex, OpenSearchSQLParser.VIEW)
+        // ) {
+        //   suggestViewsOrTables = TableOrViewSuggestion.VIEWS;
+        // } else
+        if (
+          getPreviousToken(
+            tokenStream,
+            tokenDictionary,
+            cursorTokenIndex,
+            OpenSearchSQLParser.TABLES
+          )
+        ) {
+          suggestViewsOrTables = TableOrViewSuggestion.TABLES;
+        } else {
+          suggestViewsOrTables = TableOrViewSuggestion.ALL;
+        }
+        break;
+      }
       // case OpenSearchSQLParser.RULE_fullId: {
       //   if (
       //     getPreviousToken(
@@ -363,7 +367,7 @@ function enrichAutocompleteResult(
     shouldSuggestColumns || shouldSuggestConstraints || shouldSuggestColumnAliases;
   console.log('contextSuggestionsNeeded: ', contextSuggestionsNeeded);
   if (contextSuggestionsNeeded) {
-    const visitor = new MySqlSymbolTableVisitor();
+    const visitor = new OpenSearchSqlSymbolTableVisitor();
     const { tableContextSuggestion, suggestColumnAliases } = getContextSuggestions(
       OpenSearchSQLLexer,
       OpenSearchSQLParser,
@@ -374,6 +378,9 @@ function enrichAutocompleteResult(
       cursor,
       query
     );
+
+    console.log('tableContextSuggestion: ', tableContextSuggestion);
+    console.log('suggestColumnAliases: ', suggestColumnAliases);
 
     if (shouldSuggestColumns && tableContextSuggestion) {
       result.suggestColumns = tableContextSuggestion;
