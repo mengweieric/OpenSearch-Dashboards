@@ -15,7 +15,7 @@ import {
   EuiLink,
   htmlIdGenerator,
 } from '@elastic/eui';
-
+import { monaco } from '@osd/monaco';
 import { FormattedMessage } from '@osd/i18n/react';
 import { isEqual, isFunction } from 'lodash';
 import { Toast } from 'src/core/public';
@@ -33,6 +33,8 @@ import { PersistedLog, getQueryLog, matchPairs, toUser, fromUser } from '../../q
 import { SuggestionsListSize } from '../typeahead/suggestions_component';
 import { Settings } from '..';
 import { DataSettings, QueryEnhancement } from '../types';
+const LANGUAGE_ID = 'SQL';
+monaco.languages.register({ id: LANGUAGE_ID });
 
 export interface QueryStringInputProps {
   indexPatterns: Array<IIndexPattern | string>;
@@ -480,6 +482,28 @@ export default class QueryStringInputUI extends Component<Props, State> {
     }
   };
 
+  provideCompletionItems = async (model: monaco.editor.ITextModel, position: monaco.Position) => {
+    const suggestions = await this.services.data.autocomplete.getQuerySuggestions({
+      query: this.getQueryString(),
+      selectionStart: position.column - 1,
+      selectionEnd: position.column - 1,
+      language: this.props.query.language,
+      indexPatterns: this.state.indexPatterns,
+    });
+
+    console.log('suggestions: ', suggestions);
+
+    return {
+      suggestions: suggestions
+        ? suggestions.list.map((s) => ({
+            label: s.text,
+            kind: monaco.languages.CompletionItemKind.Text,
+            insertText: s.text,
+          }))
+        : [],
+    };
+  };
+
   public render() {
     const isSuggestionsVisible = this.state.isSuggestionsVisible && {
       'aria-controls': 'osdTypeahead__items',
@@ -491,6 +515,7 @@ export default class QueryStringInputUI extends Component<Props, State> {
     //   this.props.className
     // );
     const className = classNames(this.props.className);
+    console.log('this.props.query.language: ', this.props.query.language);
 
     return (
       <div className={className}>
@@ -524,11 +549,10 @@ export default class QueryStringInputUI extends Component<Props, State> {
             <EuiFlexItem grow={true}>
               <CodeEditor
                 height={70}
-                languageId="json"
+                languageId={this.props.query.language}
                 value={this.getQueryString()}
-                onChange={() => {}}
+                onChange={(value) => {console.log(value)}}
                 options={{
-                  readOnly: true,
                   lineNumbers: 'on',
                   fontSize: 12,
                   minimap: {
@@ -537,6 +561,9 @@ export default class QueryStringInputUI extends Component<Props, State> {
                   scrollBeyondLastLine: false,
                   wordWrap: 'on',
                   wrappingIndent: 'indent',
+                }}
+                suggestionProvider={{
+                  provideCompletionItems: this.provideCompletionItems,
                 }}
               />
             </EuiFlexItem>
