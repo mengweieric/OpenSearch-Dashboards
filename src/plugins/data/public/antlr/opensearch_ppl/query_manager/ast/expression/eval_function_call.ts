@@ -16,7 +16,7 @@ export interface EvalFunctionCallConstructorProps {
 
 export class EvalFunctionCall extends PPLNode {
   private readonly functionName: string;
-  private readonly args: PPLNode[];
+  private readonly args: string[];
   private readonly terminateNodes: string[];
 
   /**
@@ -49,7 +49,7 @@ export class EvalFunctionCall extends PPLNode {
   getTokens(): Tokens {
     return {
       function: this.functionName,
-      args: this.args.map(arg => arg.getTokens()),
+      args: this.args,
     };
   }
 

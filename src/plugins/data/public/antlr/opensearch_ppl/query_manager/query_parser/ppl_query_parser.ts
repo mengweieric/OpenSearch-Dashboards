@@ -7,6 +7,32 @@ import { PPLSyntaxParser } from '../antlr/ppl_syntax_parser';
 import { OpenSearchPPLParser } from '../../generated/OpenSearchPPLParser';
 import { StatsAstBuilder } from '../ast/builder/stats_ast_builder';
 
+export interface ParsedTokens {
+  logicalExpression?: LogicalComparisonExpression | LogicalAndExpression | LogicalOrExpression;
+  pplCommands?: string;
+}
+
+export interface LogicalComparisonExpression {
+  leftValue: EvaluationFunction | string;
+  rightValue: EvaluationFunction | string;
+  operator: string;
+}
+
+export interface CommonCompararisonExpression {
+  left: string;
+  right: string;
+  operator: string;
+}
+
+export interface LogicalAndExpression extends CommonCompararisonExpression {}
+
+export interface LogicalOrExpression extends CommonCompararisonExpression {}
+
+export interface EvaluationFunction {
+  function: string;
+  args: string[];
+}
+
 export class PPLQueryParser {
   parser: OpenSearchPPLParser | null = null;
   visitor: any = null;
@@ -18,7 +44,7 @@ export class PPLQueryParser {
     return this;
   }
 
-  getParsedTokens() {
+  getParsedTokens(): ParsedTokens | null {
     this.visitor = new StatsAstBuilder();
     let inter = null;
     try {

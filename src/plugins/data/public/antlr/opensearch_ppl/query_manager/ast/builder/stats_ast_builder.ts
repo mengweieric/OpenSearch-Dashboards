@@ -67,26 +67,24 @@ import { EvalFunctionCall } from '../expression/eval_function_call';
 import { FunctionArgs } from '../expression/function_args';
 import { DefaultNode } from '../expression/default_node';
 
-type VisitResult = PPLNode | PPLNode[] | string;
+type VisitResult = PPLNode | PPLNode[] | string | string[];
 
 type ParsingCommand = 'statsCommand' | 'whereCommand';
 
 export interface AstBuilderConfigs {
-  parseList?: ParsingCommand[]
+  parseList?: ParsingCommand[];
 }
 
 export class StatsAstBuilder
   extends AbstractParseTreeVisitor<VisitResult>
   implements OpenSearchPPLParserVisitor<VisitResult> {
-
-    protected defaultResult(): PPLNode {
+  protected defaultResult(): PPLNode {
     return new DefaultNode({ name: 'default', children: [] as PPLNode[] });
   }
 
   visitRoot(ctx: RootContext) {
     if (!ctx.pplStatement()) return this.defaultResult();
-    const result = this.visitPplStatement(ctx.pplStatement()!);
-    return result
+    return this.visitPplStatement(ctx.pplStatement()!);
   }
 
   visitPplStatement(ctx: PplStatementContext): PPLNode {
@@ -415,12 +413,12 @@ export class StatsAstBuilder
   visitEvalFunctionCall(ctx: EvalFunctionCallContext): VisitResult {
     let terminateNodes: string[] = [];
     let functionName: string = ''; // Initialize with an empty string
-    let functionArgs: PPLNode[] = [];
+    let functionArgs: string[] = [];
     ctx.children.forEach((childCtx) => {
       if (childCtx instanceof TerminalNode) {
         terminateNodes.push(childCtx.getText());
       } else if (childCtx instanceof FunctionArgsContext) {
-        functionArgs.push(this.visitFunctionArgs(childCtx));
+        functionArgs = [...(this.visitFunctionArgs(childCtx) as string[])];
       } else if (childCtx instanceof EvalFunctionNameContext) {
         functionName = childCtx.getText();
       }
@@ -436,23 +434,14 @@ export class StatsAstBuilder
     });
   }
 
-  visitFunctionArgs(ctx: FunctionArgsContext): PPLNode {
-    const terminateNodes: string[] = [];
+  visitFunctionArgs(ctx: FunctionArgsContext): VisitResult {
     const args: string[] = [];
     ctx.children.forEach((childCtx) => {
-      if (childCtx instanceof TerminalNode) {
-        terminateNodes.push(childCtx.getText());
-      } else if (childCtx instanceof FunctionArgContext) {
+      if (childCtx instanceof FunctionArgContext) {
         args.push(this.visitFunctionArg(childCtx));
       }
     });
-    return new FunctionArgs({
-      name: 'function_args',
-      children: [] as PPLNode[],
-      terminateNodes,
-      args,
-      indices: { start: ctx.start?.start, end: ctx.stop?.stop },
-    });
+    return args;
   }
 
   visitFunctionArg(ctx: FunctionArgContext): string {
@@ -473,7 +462,9 @@ export class StatsAstBuilder
 
   visitFieldList(ctx: FieldListContext): PPLNode[] {
     let fieldExpression: string = '';
-    return ctx.children.filter((childCtx) => childCtx instanceof FieldExpressionContext).map((childCtx) => {
+    return ctx.children
+      .filter((childCtx) => childCtx instanceof FieldExpressionContext)
+      .map((childCtx) => {
         fieldExpression = this.visitFieldExpression(childCtx);
         return new Field({
           name: 'field_list',
@@ -484,7 +475,7 @@ export class StatsAstBuilder
             end: childCtx.stop?.stop,
           },
         });
-    }) as PPLNode[];
+      }) as PPLNode[];
   }
 
   visitFieldExpression(ctx: FieldExpressionContext): string {
