@@ -36,4 +36,8 @@ export class PPLQueryBuilder {
 
     return '';
   }
+
+  buildTimeRange(query: string, timeRangeTokens: any) {
+    return query;
+  }
 }

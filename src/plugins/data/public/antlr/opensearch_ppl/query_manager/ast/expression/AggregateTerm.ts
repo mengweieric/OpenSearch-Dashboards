@@ -2,28 +2,56 @@
  * Copyright OpenSearch Contributors
  * SPDX-License-Identifier: Apache-2.0
  */
-import { PPLNode } from '../node';
+import { PPLNode, QueryIndices, Tokens } from '../node';
+
+export interface AggregateTermConstructorProps {
+  name: string;
+  children: PPLNode[];
+  statsFunction: PPLNode;
+  customLabel: string;
+  indices: QueryIndices;
+}
+
 export class AggregateTerm extends PPLNode {
-  constructor(
-    name: string,
-    children: PPLNode[],
-    private statsFunction: PPLNode,
-    private customLabel: string
-  ) {
-    super(name, children);
+  private readonly statsFunction: PPLNode;
+  private readonly customLabel: string;
+
+  /**
+   * Creates an instance of AggregateTerm.
+   * @param name - The name of the node.
+   * @param children - The children of the node.
+   * @param statsFunction - The statistics function of the aggregate term.
+   * @param customLabel - The custom label for the aggregate term.
+   * @param indices - The start and end indices of the node in the original query.
+   */
+  constructor({
+    name,
+    children,
+    statsFunction,
+    customLabel,
+    indices,
+  }: AggregateTermConstructorProps) {
+    super({ name, children, indices });
+    this.statsFunction = statsFunction;
+    this.customLabel = customLabel;
   }
 
-  getTokens() {
+  /**
+   * Gets the tokens of the node.
+   * @returns An object containing the statistics function tokens and the custom label.
+   */
+  getTokens(): Tokens {
     return {
-      function: this.statsFunction.getTokens(),
+      function: this.statsFunction,
       customLabel: this.customLabel,
     };
   }
 
+  /**
+   * Gets a string representation of the node.
+   * @returns A string representation of the aggregate term, optionally including the custom label.
+   */
   toString(): string {
-    if (this.customLabel) {
-      return `${this.statsFunction.toString()}${this.customLabel ? ` as ${this.customLabel}` : ''}`;
-    }
-    return `${this.statsFunction.toString()}`;
+    return `${this.statsFunction.toString()}${this.customLabel ? ` as ${this.customLabel}` : ''}`;
   }
 }

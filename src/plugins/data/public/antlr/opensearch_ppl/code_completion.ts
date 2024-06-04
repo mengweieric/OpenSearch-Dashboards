@@ -36,13 +36,18 @@ function getExistingTokenNames(tokenStream, lexer, cursorIndex) {
   return existingTokens;
 }
 
+const q1 =
+"source=opensearch_dashboards_sample_data_logs | where timestamp >= '2024-01-01 08:00:00.000000' and utc_time <= '2024-06-01 23:13:14.021000'  |    stats    avg(bytes) by agent,     erros | sort avg_bytes desc";
+const q2 = "source=opensearch_dashboards_sample_data_logs | where `timestamp` > DATE_SUB(NOW(), INTERVAL 1 DAY) | where machine.os='osx' or  machine.os='ios' |  stats avg(machine.ram) by span(timestamp,1d)";
+const qm = new QueryManager();
+const statsPartial = qm.queryParser().parse(q1).getParsedTokens();
+const nonStatsPartial = qm.queryParser().parse(q2).getParsedTokens();
+const wherePartial = qm.queryParser().parse(q2).getParsedTokens();
+console.log('q1: ', statsPartial); 
+console.log('q2: ', nonStatsPartial);
+console.log('wherePartial: ', wherePartial);
+
 export const getSuggestions = async ({ selectionStart, query }) => {
-  const q1 = 'source =     opensearch_dashboards_sample_data_logs |    stats    avg(bytes) by agent,     erros     ';
-  const q2 = 'source = opensearch_dashboards_sample_data_logs';
-  const qm = new QueryManager();
-  const statsPartial = qm.queryParser().parse(q1).getStats();
-  const nonStatsPartial = qm.queryParser().parse(q2).getStats();
-  console.log('statsPartial: ', statsPartial, ' nonStatsPartial: ', nonStatsPartial);
   try {
     const cursorIndex = selectionStart;
     const parser = new OpenSearchPPLParser(
@@ -59,7 +64,5 @@ export const getSuggestions = async ({ selectionStart, query }) => {
         suggestions.push(tokenName);
       }
     }
-    // console.log('suggestions: ', suggestions);
-    return suggestions;
   } catch (e) {}
 };

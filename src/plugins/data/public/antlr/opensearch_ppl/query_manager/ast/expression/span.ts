@@ -3,19 +3,33 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { PPLNode } from '../node';
+import { PPLNode, QueryIndices, Tokens } from '../node';
+
+export interface SpanExpressionConstructorProps {
+  name: string;
+  children: PPLNode[];
+  spanExpression: PPLNode;
+  customLabel: string;
+  indices: QueryIndices;
+}
 
 export class Span extends PPLNode {
-  constructor(
-    name: string,
-    children: PPLNode[],
-    private spanExpression: PPLNode,
-    private customLabel: string
-  ) {
-    super(name, children);
+  private readonly spanExpression: PPLNode;
+  private readonly customLabel: string;
+
+  constructor({
+    name,
+    children,
+    spanExpression,
+    customLabel,
+    indices,
+  }: SpanExpressionConstructorProps) {
+    super({ name, children, indices });
+    this.spanExpression = spanExpression;
+    this.customLabel = customLabel;
   }
 
-  getTokens() {
+  getTokens(): Tokens {
     return {
       span_expression: this.spanExpression.getTokens(),
       customLabel: this.customLabel,

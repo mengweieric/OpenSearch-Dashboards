@@ -57,10 +57,10 @@ function getTokenNameByType(parser, tokenType) {
 
 export const getSuggestions = async ({ selectionStart, selectionEnd, query }) => {
   // console.log('selectionStart: ', selectionStart, ' query: ', query);
-  // const suggestions = getOpenSearchSqlAutoCompleteSuggestions(query, {
-  //   line: 1,
-  //   column: selectionStart + 1,
-  // });
+  const suggestions = getOpenSearchSqlAutoCompleteSuggestions(query, {
+    line: 1,
+    column: selectionStart + 1,
+  });
   // console.log('this suggestions: ', suggestions);
   // console.log(
   //   'selectionStart: ',
@@ -70,21 +70,20 @@ export const getSuggestions = async ({ selectionStart, selectionEnd, query }) =>
   //   ' selectionEnd: ',
   //   selectionEnd
   // );
-  const cursorIndex = selectionStart;
-  const parser = new OpenSearchSQLParser(
-    new CommonTokenStream(new OpenSearchSQLLexer(CharStream.fromString(query)))
-  );
-  const tree = parser.sqlStatement();
-  const core = new CodeCompletionCore(parser);
-  const candidates = core.collectCandidates(cursorIndex, tree);
-  const suggestions = [];
-  for (const [tokenType, _] of candidates.tokens.entries()) {
-    const tokenName = getTokenNameByType(parser, tokenType);
-    if (tokenName) {
-      suggestions.push(tokenName);
-    }
-  }
-  console.log('suggestions: ', suggestions);
+  // const cursorIndex = selectionStart;
+  // const parser = new OpenSearchSQLParser(
+  //   new CommonTokenStream(new OpenSearchSQLLexer(CharStream.fromString(query)))
+  // );
+  // const tree = parser.sqlStatement();
+  // const core = new CodeCompletionCore(parser);
+  // const candidates = core.collectCandidates(cursorIndex, tree);
+  // const suggestions = [];
+  // for (const [tokenType, _] of candidates.tokens.entries()) {
+  //   const tokenName = getTokenNameByType(parser, tokenType);
+  //   if (tokenName) {
+  //     suggestions.push(tokenName);
+  //   }
+  // }
   return suggestions;
 };
 

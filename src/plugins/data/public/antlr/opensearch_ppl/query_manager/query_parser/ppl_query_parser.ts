@@ -5,7 +5,7 @@
 
 import { PPLSyntaxParser } from '../antlr/ppl_syntax_parser';
 import { OpenSearchPPLParser } from '../../generated/OpenSearchPPLParser';
-import { StatsAstVisitor } from '../ast/builder/stats_ast_visitor';
+import { StatsAstBuilder } from '../ast/builder/stats_ast_builder';
 
 export class PPLQueryParser {
   parser: OpenSearchPPLParser | null = null;
@@ -18,8 +18,8 @@ export class PPLQueryParser {
     return this;
   }
 
-  getStats() {
-    this.visitor = new StatsAstVisitor();
+  getParsedTokens() {
+    this.visitor = new StatsAstBuilder();
     let inter = null;
     try {
       inter = this.visitor.visitRoot(this.parser!.root()).getTokens();
