@@ -49,7 +49,12 @@ export class EvalFunctionCall extends PPLNode {
   getTokens(): Tokens {
     return {
       function: this.functionName,
-      args: this.args,
+      args: this.args.map((arg) => {
+        if (typeof arg === 'string') {
+          return arg;
+        }
+        return arg.getTokens();
+      }),
     };
   }
 
@@ -58,6 +63,8 @@ export class EvalFunctionCall extends PPLNode {
    * @returns A string representation of the evaluation function call.
    */
   toString(): string {
-    return `${this.functionName}${this.terminateNodes[0]}${this.args.map(arg => arg.toString()).join(', ')}${this.terminateNodes[1]}`;
+    return `${this.functionName}${this.terminateNodes[0]}${this.args
+      .map((arg) => arg.toString())
+      .join(', ')}${this.terminateNodes[1]}`;
   }
 }

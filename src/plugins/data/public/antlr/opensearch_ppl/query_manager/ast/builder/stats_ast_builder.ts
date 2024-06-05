@@ -46,6 +46,7 @@ import {
   EvalFunctionNameContext,
   FunctionArgsContext,
   ValueExpressionDefaultContext,
+  IntervalLiteralContext,
 } from '../../../generated/OpenSearchPPLParser';
 import { OpenSearchPPLParserVisitor } from '../../../generated/OpenSearchPPLParserVisitor';
 import { PPLNode, Tokens } from '../node';
@@ -64,16 +65,10 @@ import { QueryStatement } from '../tree/query_statement';
 import { LogicalAnd } from '../expression/logical_and';
 import { LogicalOr } from '../expression/logical_or';
 import { EvalFunctionCall } from '../expression/eval_function_call';
-import { FunctionArgs } from '../expression/function_args';
 import { DefaultNode } from '../expression/default_node';
+import { IntervalLiteral } from '../expression/interval_literal';
 
 type VisitResult = PPLNode | PPLNode[] | string | string[];
-
-type ParsingCommand = 'statsCommand' | 'whereCommand';
-
-export interface AstBuilderConfigs {
-  parseList?: ParsingCommand[];
-}
 
 export class StatsAstBuilder
   extends AbstractParseTreeVisitor<VisitResult>
@@ -333,8 +328,27 @@ export class StatsAstBuilder
     });
   }
 
-  visitLiteralValue(ctx: LiteralValueContext): string {
+  visitLiteralValue(ctx: LiteralValueContext): VisitResult {
+    const childCtx = ctx.getChild(0);
+    if (childCtx instanceof IntervalLiteralContext) {
+      return this.visitIntervalLiteral(childCtx);
+    }
     return ctx.getText();
+  }
+
+  visitIntervalLiteral(ctx: IntervalLiteralContext): VisitResult {
+    const typeLiteral = ctx.getChild(0)?.getText() ?? '';
+    const value = ctx.getChild(1)?.getText() ?? '';
+    const unit = ctx.getChild(2)?.getText() ?? '';
+
+    return new IntervalLiteral({
+      name: 'interval_literal',
+      children: [] as PPLNode[],
+      typeLiteral,
+      value,
+      unit,
+      indices: { start: ctx.start?.start, end: ctx.stop },
+    });
   }
 
   visitTimespanUnit(ctx: TimespanUnitContext): string {
@@ -389,7 +403,7 @@ export class StatsAstBuilder
     } else if (childCtx instanceof TimestampFunctionContext) {
       return this.visitTimestampFunction(childCtx as TimestampFunctionContext);
     }
-    return ctx.getText();
+    return this.visitChildren(ctx) as VisitResult;
   }
 
   visitTimestampFunction(ctx: TimestampFunctionContext): string {
@@ -444,11 +458,19 @@ export class StatsAstBuilder
     return args;
   }
 
-  visitFunctionArg(ctx: FunctionArgContext): string {
+  visitFunctionArg(ctx: FunctionArgContext): VisitResult {
+    const childCtx = ctx.getChild(0);
+    if (childCtx instanceof ValueExpressionDefaultContext) {
+      return this.visitValueExpressionDefault(childCtx);
+    }
     return ctx.getText();
   }
 
-  visitValueExpressionDefaultContext(ctx: ValueExpressionDefaultContext): string {
+  visitValueExpressionDefault(ctx: ValueExpressionDefaultContext): VisitResult {
+    const childCtx = ctx.getChild(0);
+    if (childCtx instanceof PrimaryExpressionContext) {
+      return this.visitPrimaryExpression(childCtx);
+    }
     return ctx.getText();
   }
 

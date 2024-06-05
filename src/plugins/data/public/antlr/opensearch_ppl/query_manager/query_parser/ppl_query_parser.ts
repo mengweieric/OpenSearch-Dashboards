@@ -5,7 +5,7 @@
 
 import { PPLSyntaxParser } from '../antlr/ppl_syntax_parser';
 import { OpenSearchPPLParser } from '../../generated/OpenSearchPPLParser';
-import { StatsAstBuilder } from '../ast/builder/stats_ast_builder';
+import { AstBuilderConfigs, ParsingCommand, StatsAstBuilder } from '../ast/builder/stats_ast_builder';
 
 export interface ParsedTokens {
   logicalExpression?: LogicalComparisonExpression | LogicalAndExpression | LogicalOrExpression;
