@@ -98,8 +98,10 @@ describe('createPluginInitializerContext', () => {
     expect(configObject).toStrictEqual({
       opensearchDashboards: {
         index: '.kibana',
+        configIndex: '.opensearch_dashboards_config',
         autocompleteTerminateAfter: duration(100000),
         autocompleteTimeout: duration(1000),
+        futureNavigation: false,
       },
       opensearch: {
         shardTimeout: duration(30, 's'),
@@ -107,7 +109,12 @@ describe('createPluginInitializerContext', () => {
         pingTimeout: duration(30, 's'),
       },
       path: { data: fromRoot('data') },
-      savedObjects: { maxImportPayloadBytes: new ByteSizeValue(26214400) },
+      savedObjects: {
+        maxImportPayloadBytes: new ByteSizeValue(26214400),
+        permission: {
+          enabled: false,
+        },
+      },
     });
   });
 

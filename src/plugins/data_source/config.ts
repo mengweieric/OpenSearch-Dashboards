@@ -31,6 +31,15 @@ export const configSchema = schema.object({
       defaultValue: new Array(32).fill(0),
     }),
   }),
+  ssl: schema.object({
+    verificationMode: schema.oneOf(
+      [schema.literal('none'), schema.literal('certificate'), schema.literal('full')],
+      { defaultValue: 'full' }
+    ),
+    certificateAuthorities: schema.maybe(
+      schema.oneOf([schema.string(), schema.arrayOf(schema.string(), { minSize: 1 })])
+    ),
+  }),
   clientPool: schema.object({
     size: schema.number({ defaultValue: 5 }),
   }),
@@ -39,6 +48,17 @@ export const configSchema = schema.object({
     appender: fileAppenderSchema,
   }),
   endpointDeniedIPs: schema.maybe(schema.arrayOf(schema.string())),
+  authTypes: schema.object({
+    NoAuthentication: schema.object({
+      enabled: schema.boolean({ defaultValue: true }),
+    }),
+    UsernamePassword: schema.object({
+      enabled: schema.boolean({ defaultValue: true }),
+    }),
+    AWSSigV4: schema.object({
+      enabled: schema.boolean({ defaultValue: true }),
+    }),
+  }),
 });
 
 export type DataSourcePluginConfigType = TypeOf<typeof configSchema>;

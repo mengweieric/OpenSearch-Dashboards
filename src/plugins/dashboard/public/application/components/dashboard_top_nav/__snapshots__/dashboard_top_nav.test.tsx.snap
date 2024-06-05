@@ -260,6 +260,24 @@ exports[`Dashboard top nav render in embed mode 1`] = `
                 "getValueSuggestions": [MockFunction],
                 "hasQuerySuggestions": [MockFunction],
               },
+              "dataSources": Object {
+                "dataSourceFactory": DataSourceFactory {
+                  "dataSourceClasses": Object {},
+                },
+                "dataSourceService": DataSourceService {
+                  "dataSourceFetchers": Object {},
+                  "dataSources": Object {},
+                  "dataSourcesSubject": BehaviorSubject {
+                    "_isScalar": false,
+                    "_value": Object {},
+                    "closed": false,
+                    "hasError": false,
+                    "isStopped": false,
+                    "observers": Array [],
+                    "thrownError": null,
+                  },
+                },
+              },
               "fieldFormats": Object {
                 "deserialize": [MockFunction],
                 "getByFieldType": [MockFunction],
@@ -349,6 +367,7 @@ exports[`Dashboard top nav render in embed mode 1`] = `
                 },
               },
               "search": Object {
+                "__enhance": [MockFunction],
                 "aggs": Object {
                   "calculateAutoTimeExpression": [Function],
                   "createAggConfigs": [MockFunction],
@@ -357,6 +376,12 @@ exports[`Dashboard top nav render in embed mode 1`] = `
                     "getAll": [Function],
                   },
                 },
+                "df": Object {
+                  "clear": [MockFunction],
+                  "get": [MockFunction],
+                  "set": [MockFunction],
+                },
+                "getDefaultSearchInterceptor": [MockFunction],
                 "search": [MockFunction],
                 "searchSource": Object {
                   "create": [MockFunction],
@@ -367,6 +392,9 @@ exports[`Dashboard top nav render in embed mode 1`] = `
               "ui": Object {
                 "IndexPatternSelect": [MockFunction],
                 "SearchBar": [MockFunction],
+                "Settings": undefined,
+                "isEnhancementsEnabled": false,
+                "queryEnhancements": Map {},
               },
             },
             "docLinks": Object {
@@ -705,6 +733,9 @@ exports[`Dashboard top nav render in embed mode 1`] = `
                     "tls": "https://opensearch.org/docs/mocked-test-branch/dashboards/install/tls/",
                   },
                   "introduction": "https://opensearch.org/docs/mocked-test-branch/dashboards/index/",
+                  "management": Object {
+                    "advancedSettings": "https://opensearch.org/docs/mocked-test-branch/dashboards/management/advanced-settings/",
+                  },
                   "mapTiles": "https://opensearch.org/docs/mocked-test-branch/dashboards/maptiles",
                   "notebooks": Object {
                     "base": "https://opensearch.org/docs/mocked-test-branch/dashboards/notebooks",
@@ -748,7 +779,9 @@ exports[`Dashboard top nav render in embed mode 1`] = `
               },
               "basePath": BasePath {
                 "basePath": "",
+                "clientBasePath": "",
                 "get": [Function],
+                "getBasePath": [Function],
                 "prepend": [Function],
                 "remove": [Function],
                 "serverBasePath": "",
@@ -800,6 +833,13 @@ exports[`Dashboard top nav render in embed mode 1`] = `
               "openConfirm": [MockFunction],
               "openFlyout": [MockFunction],
               "openModal": [MockFunction],
+              "sidecar": Object {
+                "getSidecarConfig$": [MockFunction],
+                "hide": [MockFunction],
+                "open": [MockFunction],
+                "setSidecarConfig": [MockFunction],
+                "show": [MockFunction],
+              },
             },
             "savedObjects": Object {
               "client": Object {
@@ -810,6 +850,7 @@ exports[`Dashboard top nav render in embed mode 1`] = `
                 "delete": [MockFunction],
                 "find": [MockFunction],
                 "get": [MockFunction],
+                "setCurrentWorkspace": [MockFunction],
                 "update": [MockFunction],
               },
             },
@@ -942,6 +983,7 @@ exports[`Dashboard top nav render in embed mode 1`] = `
             onQuerySubmit={[Function]}
             onSavedQueryIdChange={[Function]}
             screenTitle="Dashboard Test Title"
+            showDataSourceMenu={false}
             showDatePicker={false}
             showFilterBar={false}
             showQueryBar={false}
@@ -1217,6 +1259,24 @@ exports[`Dashboard top nav render in embed mode, and force hide filter bar 1`] =
                 "getValueSuggestions": [MockFunction],
                 "hasQuerySuggestions": [MockFunction],
               },
+              "dataSources": Object {
+                "dataSourceFactory": DataSourceFactory {
+                  "dataSourceClasses": Object {},
+                },
+                "dataSourceService": DataSourceService {
+                  "dataSourceFetchers": Object {},
+                  "dataSources": Object {},
+                  "dataSourcesSubject": BehaviorSubject {
+                    "_isScalar": false,
+                    "_value": Object {},
+                    "closed": false,
+                    "hasError": false,
+                    "isStopped": false,
+                    "observers": Array [],
+                    "thrownError": null,
+                  },
+                },
+              },
               "fieldFormats": Object {
                 "deserialize": [MockFunction],
                 "getByFieldType": [MockFunction],
@@ -1306,6 +1366,7 @@ exports[`Dashboard top nav render in embed mode, and force hide filter bar 1`] =
                 },
               },
               "search": Object {
+                "__enhance": [MockFunction],
                 "aggs": Object {
                   "calculateAutoTimeExpression": [Function],
                   "createAggConfigs": [MockFunction],
@@ -1314,6 +1375,12 @@ exports[`Dashboard top nav render in embed mode, and force hide filter bar 1`] =
                     "getAll": [Function],
                   },
                 },
+                "df": Object {
+                  "clear": [MockFunction],
+                  "get": [MockFunction],
+                  "set": [MockFunction],
+                },
+                "getDefaultSearchInterceptor": [MockFunction],
                 "search": [MockFunction],
                 "searchSource": Object {
                   "create": [MockFunction],
@@ -1324,6 +1391,9 @@ exports[`Dashboard top nav render in embed mode, and force hide filter bar 1`] =
               "ui": Object {
                 "IndexPatternSelect": [MockFunction],
                 "SearchBar": [MockFunction],
+                "Settings": undefined,
+                "isEnhancementsEnabled": false,
+                "queryEnhancements": Map {},
               },
             },
             "docLinks": Object {
@@ -1662,6 +1732,9 @@ exports[`Dashboard top nav render in embed mode, and force hide filter bar 1`] =
                     "tls": "https://opensearch.org/docs/mocked-test-branch/dashboards/install/tls/",
                   },
                   "introduction": "https://opensearch.org/docs/mocked-test-branch/dashboards/index/",
+                  "management": Object {
+                    "advancedSettings": "https://opensearch.org/docs/mocked-test-branch/dashboards/management/advanced-settings/",
+                  },
                   "mapTiles": "https://opensearch.org/docs/mocked-test-branch/dashboards/maptiles",
                   "notebooks": Object {
                     "base": "https://opensearch.org/docs/mocked-test-branch/dashboards/notebooks",
@@ -1705,7 +1778,9 @@ exports[`Dashboard top nav render in embed mode, and force hide filter bar 1`] =
               },
               "basePath": BasePath {
                 "basePath": "",
+                "clientBasePath": "",
                 "get": [Function],
+                "getBasePath": [Function],
                 "prepend": [Function],
                 "remove": [Function],
                 "serverBasePath": "",
@@ -1757,6 +1832,13 @@ exports[`Dashboard top nav render in embed mode, and force hide filter bar 1`] =
               "openConfirm": [MockFunction],
               "openFlyout": [MockFunction],
               "openModal": [MockFunction],
+              "sidecar": Object {
+                "getSidecarConfig$": [MockFunction],
+                "hide": [MockFunction],
+                "open": [MockFunction],
+                "setSidecarConfig": [MockFunction],
+                "show": [MockFunction],
+              },
             },
             "savedObjects": Object {
               "client": Object {
@@ -1767,6 +1849,7 @@ exports[`Dashboard top nav render in embed mode, and force hide filter bar 1`] =
                 "delete": [MockFunction],
                 "find": [MockFunction],
                 "get": [MockFunction],
+                "setCurrentWorkspace": [MockFunction],
                 "update": [MockFunction],
               },
             },
@@ -1899,6 +1982,7 @@ exports[`Dashboard top nav render in embed mode, and force hide filter bar 1`] =
             onQuerySubmit={[Function]}
             onSavedQueryIdChange={[Function]}
             screenTitle="Dashboard Test Title"
+            showDataSourceMenu={false}
             showDatePicker={false}
             showFilterBar={false}
             showQueryBar={false}
@@ -2174,6 +2258,24 @@ exports[`Dashboard top nav render in embed mode, components can be forced show b
                 "getValueSuggestions": [MockFunction],
                 "hasQuerySuggestions": [MockFunction],
               },
+              "dataSources": Object {
+                "dataSourceFactory": DataSourceFactory {
+                  "dataSourceClasses": Object {},
+                },
+                "dataSourceService": DataSourceService {
+                  "dataSourceFetchers": Object {},
+                  "dataSources": Object {},
+                  "dataSourcesSubject": BehaviorSubject {
+                    "_isScalar": false,
+                    "_value": Object {},
+                    "closed": false,
+                    "hasError": false,
+                    "isStopped": false,
+                    "observers": Array [],
+                    "thrownError": null,
+                  },
+                },
+              },
               "fieldFormats": Object {
                 "deserialize": [MockFunction],
                 "getByFieldType": [MockFunction],
@@ -2263,6 +2365,7 @@ exports[`Dashboard top nav render in embed mode, components can be forced show b
                 },
               },
               "search": Object {
+                "__enhance": [MockFunction],
                 "aggs": Object {
                   "calculateAutoTimeExpression": [Function],
                   "createAggConfigs": [MockFunction],
@@ -2271,6 +2374,12 @@ exports[`Dashboard top nav render in embed mode, components can be forced show b
                     "getAll": [Function],
                   },
                 },
+                "df": Object {
+                  "clear": [MockFunction],
+                  "get": [MockFunction],
+                  "set": [MockFunction],
+                },
+                "getDefaultSearchInterceptor": [MockFunction],
                 "search": [MockFunction],
                 "searchSource": Object {
                   "create": [MockFunction],
@@ -2281,6 +2390,9 @@ exports[`Dashboard top nav render in embed mode, components can be forced show b
               "ui": Object {
                 "IndexPatternSelect": [MockFunction],
                 "SearchBar": [MockFunction],
+                "Settings": undefined,
+                "isEnhancementsEnabled": false,
+                "queryEnhancements": Map {},
               },
             },
             "docLinks": Object {
@@ -2619,6 +2731,9 @@ exports[`Dashboard top nav render in embed mode, components can be forced show b
                     "tls": "https://opensearch.org/docs/mocked-test-branch/dashboards/install/tls/",
                   },
                   "introduction": "https://opensearch.org/docs/mocked-test-branch/dashboards/index/",
+                  "management": Object {
+                    "advancedSettings": "https://opensearch.org/docs/mocked-test-branch/dashboards/management/advanced-settings/",
+                  },
                   "mapTiles": "https://opensearch.org/docs/mocked-test-branch/dashboards/maptiles",
                   "notebooks": Object {
                     "base": "https://opensearch.org/docs/mocked-test-branch/dashboards/notebooks",
@@ -2662,7 +2777,9 @@ exports[`Dashboard top nav render in embed mode, components can be forced show b
               },
               "basePath": BasePath {
                 "basePath": "",
+                "clientBasePath": "",
                 "get": [Function],
+                "getBasePath": [Function],
                 "prepend": [Function],
                 "remove": [Function],
                 "serverBasePath": "",
@@ -2714,6 +2831,13 @@ exports[`Dashboard top nav render in embed mode, components can be forced show b
               "openConfirm": [MockFunction],
               "openFlyout": [MockFunction],
               "openModal": [MockFunction],
+              "sidecar": Object {
+                "getSidecarConfig$": [MockFunction],
+                "hide": [MockFunction],
+                "open": [MockFunction],
+                "setSidecarConfig": [MockFunction],
+                "show": [MockFunction],
+              },
             },
             "savedObjects": Object {
               "client": Object {
@@ -2724,6 +2848,7 @@ exports[`Dashboard top nav render in embed mode, components can be forced show b
                 "delete": [MockFunction],
                 "find": [MockFunction],
                 "get": [MockFunction],
+                "setCurrentWorkspace": [MockFunction],
                 "update": [MockFunction],
               },
             },
@@ -2856,6 +2981,7 @@ exports[`Dashboard top nav render in embed mode, components can be forced show b
             onQuerySubmit={[Function]}
             onSavedQueryIdChange={[Function]}
             screenTitle="Dashboard Test Title"
+            showDataSourceMenu={false}
             showDatePicker={false}
             showFilterBar={false}
             showQueryBar={false}
@@ -3131,6 +3257,24 @@ exports[`Dashboard top nav render in full screen mode with appended URL param bu
                 "getValueSuggestions": [MockFunction],
                 "hasQuerySuggestions": [MockFunction],
               },
+              "dataSources": Object {
+                "dataSourceFactory": DataSourceFactory {
+                  "dataSourceClasses": Object {},
+                },
+                "dataSourceService": DataSourceService {
+                  "dataSourceFetchers": Object {},
+                  "dataSources": Object {},
+                  "dataSourcesSubject": BehaviorSubject {
+                    "_isScalar": false,
+                    "_value": Object {},
+                    "closed": false,
+                    "hasError": false,
+                    "isStopped": false,
+                    "observers": Array [],
+                    "thrownError": null,
+                  },
+                },
+              },
               "fieldFormats": Object {
                 "deserialize": [MockFunction],
                 "getByFieldType": [MockFunction],
@@ -3220,6 +3364,7 @@ exports[`Dashboard top nav render in full screen mode with appended URL param bu
                 },
               },
               "search": Object {
+                "__enhance": [MockFunction],
                 "aggs": Object {
                   "calculateAutoTimeExpression": [Function],
                   "createAggConfigs": [MockFunction],
@@ -3228,6 +3373,12 @@ exports[`Dashboard top nav render in full screen mode with appended URL param bu
                     "getAll": [Function],
                   },
                 },
+                "df": Object {
+                  "clear": [MockFunction],
+                  "get": [MockFunction],
+                  "set": [MockFunction],
+                },
+                "getDefaultSearchInterceptor": [MockFunction],
                 "search": [MockFunction],
                 "searchSource": Object {
                   "create": [MockFunction],
@@ -3238,6 +3389,9 @@ exports[`Dashboard top nav render in full screen mode with appended URL param bu
               "ui": Object {
                 "IndexPatternSelect": [MockFunction],
                 "SearchBar": [MockFunction],
+                "Settings": undefined,
+                "isEnhancementsEnabled": false,
+                "queryEnhancements": Map {},
               },
             },
             "docLinks": Object {
@@ -3576,6 +3730,9 @@ exports[`Dashboard top nav render in full screen mode with appended URL param bu
                     "tls": "https://opensearch.org/docs/mocked-test-branch/dashboards/install/tls/",
                   },
                   "introduction": "https://opensearch.org/docs/mocked-test-branch/dashboards/index/",
+                  "management": Object {
+                    "advancedSettings": "https://opensearch.org/docs/mocked-test-branch/dashboards/management/advanced-settings/",
+                  },
                   "mapTiles": "https://opensearch.org/docs/mocked-test-branch/dashboards/maptiles",
                   "notebooks": Object {
                     "base": "https://opensearch.org/docs/mocked-test-branch/dashboards/notebooks",
@@ -3619,7 +3776,9 @@ exports[`Dashboard top nav render in full screen mode with appended URL param bu
               },
               "basePath": BasePath {
                 "basePath": "",
+                "clientBasePath": "",
                 "get": [Function],
+                "getBasePath": [Function],
                 "prepend": [Function],
                 "remove": [Function],
                 "serverBasePath": "",
@@ -3671,6 +3830,13 @@ exports[`Dashboard top nav render in full screen mode with appended URL param bu
               "openConfirm": [MockFunction],
               "openFlyout": [MockFunction],
               "openModal": [MockFunction],
+              "sidecar": Object {
+                "getSidecarConfig$": [MockFunction],
+                "hide": [MockFunction],
+                "open": [MockFunction],
+                "setSidecarConfig": [MockFunction],
+                "show": [MockFunction],
+              },
             },
             "savedObjects": Object {
               "client": Object {
@@ -3681,6 +3847,7 @@ exports[`Dashboard top nav render in full screen mode with appended URL param bu
                 "delete": [MockFunction],
                 "find": [MockFunction],
                 "get": [MockFunction],
+                "setCurrentWorkspace": [MockFunction],
                 "update": [MockFunction],
               },
             },
@@ -3813,6 +3980,7 @@ exports[`Dashboard top nav render in full screen mode with appended URL param bu
             onQuerySubmit={[Function]}
             onSavedQueryIdChange={[Function]}
             screenTitle="Dashboard Test Title"
+            showDataSourceMenu={false}
             showDatePicker={false}
             showFilterBar={false}
             showQueryBar={false}
@@ -4088,6 +4256,24 @@ exports[`Dashboard top nav render in full screen mode, no componenets should be 
                 "getValueSuggestions": [MockFunction],
                 "hasQuerySuggestions": [MockFunction],
               },
+              "dataSources": Object {
+                "dataSourceFactory": DataSourceFactory {
+                  "dataSourceClasses": Object {},
+                },
+                "dataSourceService": DataSourceService {
+                  "dataSourceFetchers": Object {},
+                  "dataSources": Object {},
+                  "dataSourcesSubject": BehaviorSubject {
+                    "_isScalar": false,
+                    "_value": Object {},
+                    "closed": false,
+                    "hasError": false,
+                    "isStopped": false,
+                    "observers": Array [],
+                    "thrownError": null,
+                  },
+                },
+              },
               "fieldFormats": Object {
                 "deserialize": [MockFunction],
                 "getByFieldType": [MockFunction],
@@ -4177,6 +4363,7 @@ exports[`Dashboard top nav render in full screen mode, no componenets should be 
                 },
               },
               "search": Object {
+                "__enhance": [MockFunction],
                 "aggs": Object {
                   "calculateAutoTimeExpression": [Function],
                   "createAggConfigs": [MockFunction],
@@ -4185,6 +4372,12 @@ exports[`Dashboard top nav render in full screen mode, no componenets should be 
                     "getAll": [Function],
                   },
                 },
+                "df": Object {
+                  "clear": [MockFunction],
+                  "get": [MockFunction],
+                  "set": [MockFunction],
+                },
+                "getDefaultSearchInterceptor": [MockFunction],
                 "search": [MockFunction],
                 "searchSource": Object {
                   "create": [MockFunction],
@@ -4195,6 +4388,9 @@ exports[`Dashboard top nav render in full screen mode, no componenets should be 
               "ui": Object {
                 "IndexPatternSelect": [MockFunction],
                 "SearchBar": [MockFunction],
+                "Settings": undefined,
+                "isEnhancementsEnabled": false,
+                "queryEnhancements": Map {},
               },
             },
             "docLinks": Object {
@@ -4533,6 +4729,9 @@ exports[`Dashboard top nav render in full screen mode, no componenets should be 
                     "tls": "https://opensearch.org/docs/mocked-test-branch/dashboards/install/tls/",
                   },
                   "introduction": "https://opensearch.org/docs/mocked-test-branch/dashboards/index/",
+                  "management": Object {
+                    "advancedSettings": "https://opensearch.org/docs/mocked-test-branch/dashboards/management/advanced-settings/",
+                  },
                   "mapTiles": "https://opensearch.org/docs/mocked-test-branch/dashboards/maptiles",
                   "notebooks": Object {
                     "base": "https://opensearch.org/docs/mocked-test-branch/dashboards/notebooks",
@@ -4576,7 +4775,9 @@ exports[`Dashboard top nav render in full screen mode, no componenets should be 
               },
               "basePath": BasePath {
                 "basePath": "",
+                "clientBasePath": "",
                 "get": [Function],
+                "getBasePath": [Function],
                 "prepend": [Function],
                 "remove": [Function],
                 "serverBasePath": "",
@@ -4628,6 +4829,13 @@ exports[`Dashboard top nav render in full screen mode, no componenets should be 
               "openConfirm": [MockFunction],
               "openFlyout": [MockFunction],
               "openModal": [MockFunction],
+              "sidecar": Object {
+                "getSidecarConfig$": [MockFunction],
+                "hide": [MockFunction],
+                "open": [MockFunction],
+                "setSidecarConfig": [MockFunction],
+                "show": [MockFunction],
+              },
             },
             "savedObjects": Object {
               "client": Object {
@@ -4638,6 +4846,7 @@ exports[`Dashboard top nav render in full screen mode, no componenets should be 
                 "delete": [MockFunction],
                 "find": [MockFunction],
                 "get": [MockFunction],
+                "setCurrentWorkspace": [MockFunction],
                 "update": [MockFunction],
               },
             },
@@ -4770,6 +4979,7 @@ exports[`Dashboard top nav render in full screen mode, no componenets should be 
             onQuerySubmit={[Function]}
             onSavedQueryIdChange={[Function]}
             screenTitle="Dashboard Test Title"
+            showDataSourceMenu={false}
             showDatePicker={false}
             showFilterBar={false}
             showQueryBar={false}
@@ -5045,6 +5255,24 @@ exports[`Dashboard top nav render with all components 1`] = `
                 "getValueSuggestions": [MockFunction],
                 "hasQuerySuggestions": [MockFunction],
               },
+              "dataSources": Object {
+                "dataSourceFactory": DataSourceFactory {
+                  "dataSourceClasses": Object {},
+                },
+                "dataSourceService": DataSourceService {
+                  "dataSourceFetchers": Object {},
+                  "dataSources": Object {},
+                  "dataSourcesSubject": BehaviorSubject {
+                    "_isScalar": false,
+                    "_value": Object {},
+                    "closed": false,
+                    "hasError": false,
+                    "isStopped": false,
+                    "observers": Array [],
+                    "thrownError": null,
+                  },
+                },
+              },
               "fieldFormats": Object {
                 "deserialize": [MockFunction],
                 "getByFieldType": [MockFunction],
@@ -5134,6 +5362,7 @@ exports[`Dashboard top nav render with all components 1`] = `
                 },
               },
               "search": Object {
+                "__enhance": [MockFunction],
                 "aggs": Object {
                   "calculateAutoTimeExpression": [Function],
                   "createAggConfigs": [MockFunction],
@@ -5142,6 +5371,12 @@ exports[`Dashboard top nav render with all components 1`] = `
                     "getAll": [Function],
                   },
                 },
+                "df": Object {
+                  "clear": [MockFunction],
+                  "get": [MockFunction],
+                  "set": [MockFunction],
+                },
+                "getDefaultSearchInterceptor": [MockFunction],
                 "search": [MockFunction],
                 "searchSource": Object {
                   "create": [MockFunction],
@@ -5152,6 +5387,9 @@ exports[`Dashboard top nav render with all components 1`] = `
               "ui": Object {
                 "IndexPatternSelect": [MockFunction],
                 "SearchBar": [MockFunction],
+                "Settings": undefined,
+                "isEnhancementsEnabled": false,
+                "queryEnhancements": Map {},
               },
             },
             "docLinks": Object {
@@ -5490,6 +5728,9 @@ exports[`Dashboard top nav render with all components 1`] = `
                     "tls": "https://opensearch.org/docs/mocked-test-branch/dashboards/install/tls/",
                   },
                   "introduction": "https://opensearch.org/docs/mocked-test-branch/dashboards/index/",
+                  "management": Object {
+                    "advancedSettings": "https://opensearch.org/docs/mocked-test-branch/dashboards/management/advanced-settings/",
+                  },
                   "mapTiles": "https://opensearch.org/docs/mocked-test-branch/dashboards/maptiles",
                   "notebooks": Object {
                     "base": "https://opensearch.org/docs/mocked-test-branch/dashboards/notebooks",
@@ -5533,7 +5774,9 @@ exports[`Dashboard top nav render with all components 1`] = `
               },
               "basePath": BasePath {
                 "basePath": "",
+                "clientBasePath": "",
                 "get": [Function],
+                "getBasePath": [Function],
                 "prepend": [Function],
                 "remove": [Function],
                 "serverBasePath": "",
@@ -5585,6 +5828,13 @@ exports[`Dashboard top nav render with all components 1`] = `
               "openConfirm": [MockFunction],
               "openFlyout": [MockFunction],
               "openModal": [MockFunction],
+              "sidecar": Object {
+                "getSidecarConfig$": [MockFunction],
+                "hide": [MockFunction],
+                "open": [MockFunction],
+                "setSidecarConfig": [MockFunction],
+                "show": [MockFunction],
+              },
             },
             "savedObjects": Object {
               "client": Object {
@@ -5595,6 +5845,7 @@ exports[`Dashboard top nav render with all components 1`] = `
                 "delete": [MockFunction],
                 "find": [MockFunction],
                 "get": [MockFunction],
+                "setCurrentWorkspace": [MockFunction],
                 "update": [MockFunction],
               },
             },
@@ -5726,6 +5977,7 @@ exports[`Dashboard top nav render with all components 1`] = `
             onQuerySubmit={[Function]}
             onSavedQueryIdChange={[Function]}
             screenTitle="Dashboard Test Title"
+            showDataSourceMenu={false}
             showDatePicker={false}
             showFilterBar={true}
             showQueryBar={false}

@@ -4,7 +4,7 @@
 # Specifies the address to which the OpenSearch Dashboards server will bind. IP addresses and host names are both valid values.
 # The default is 'localhost', which usually means remote machines will not be able to connect.
 # To allow connections from remote users, set this parameter to a non-loopback address.
-#server.host: "localhost"
+# server.host: '0.0.0.0'
 
 # Enables you to specify a path to mount OpenSearch Dashboards at if you are running behind a proxy.
 # Use the `server.rewriteBasePath` setting to tell OpenSearch Dashboards if it should remove the basePath
@@ -23,11 +23,23 @@
 #server.name: "your-hostname"
 
 # The URLs of the OpenSearch instances to use for all your queries.
-#opensearch.hosts: ["http://localhost:9200"]
+# opensearch.hosts: ["http://localhost:9200"]
+opensearch.hosts: [http://ec2-52-26-203-124.us-west-2.compute.amazonaws.com:9200]
 
 # OpenSearch Dashboards uses an index in OpenSearch to store saved searches, visualizations and
 # dashboards. OpenSearch Dashboards creates a new index if the index doesn't already exist.
 #opensearchDashboards.index: ".opensearch_dashboards"
+
+# OpenSearch Dashboards uses an index in OpenSearch to store dynamic configurations.
+# This shall be a different index from opensearchDashboards.index.
+# opensearchDashboards.configIndex: ".opensearch_dashboards_config"
+
+# Set the value of this setting to true to enable plugin application config. By default it is disabled.
+# application_config.enabled: false
+
+# Set the value of this setting to true to enable plugin CSP handler. By default it is disabled.
+# It requires the application config plugin as its dependency.
+# csp_handler.enabled: false
 
 # The default application to load.
 #opensearchDashboards.defaultAppId: "home"
@@ -123,6 +135,11 @@
 
 # Enables you to specify a file where OpenSearch Dashboards stores log output.
 #logging.dest: stdout
+
+# This configuration option controls the handling of error messages in the logging stream. It is disabled by default.
+# When set to true, the 'ENOSPC' error message will not cause the OpenSearch Dashboards process to crash. Otherwise,
+# the original behavior will be maintained.
+#logging.ignoreEnospcError: false
 
 # Set the value of this setting to true to suppress all logging output.
 #logging.silent: false
@@ -270,8 +287,73 @@
 #    'ff00::/8',
 # ]
 
+# Optional setting that enables you to specify a path to PEM files for the certificate
+# authority for your connected datasources.
+#data_source.ssl.certificateAuthorities: [ "/path/to/your/CA.pem" ]
+
+# To disregard the validity of SSL certificates for connected data sources, change this setting's value to 'none'.
+# Possible values include full, certificate and none
+#data_source.ssl.verificationMode: full
+
+# Set enabled false to hide authentication method in OpenSearch Dashboards.
+# If this setting is commented then all 3 options will be available in OpenSearch Dashboards.
+# Default value will be considered to True.
+#data_source.authTypes:
+#   NoAuthentication:
+#     enabled: true
+#   UsernamePassword:
+#     enabled: true
+#   AWSSigV4:
+#     enabled: true
+
 # Set the value of this setting to false to hide the help menu link to the OpenSearch Dashboards user survey
 # opensearchDashboards.survey.url: "https://survey.opensearch.org"
 
+# @experimental Set the value of this setting to display navigation updates, including dev tool top right navigation
+# opensearchDashboards.futureNavigation: false
+
 # Set the value of this setting to true to enable plugin augmentation on Dashboard
 # vis_augmenter.pluginAugmentationEnabled: true
+
+# Set the value to true to enable permission control for saved objects
+# Permission control depends on OpenSearch Dashboards has authentication enabled, set it to false when the security plugin is not installed,
+# if the security plugin is not installed and this config is true, permission control takes no effect.
+# savedObjects.permission.enabled: true
+
+# Set the value to true to enable workspace feature
+# workspace.enabled: false
+
+# Optional settings to specify saved object types to be deleted during migration.
+# This feature can help address compatibility issues that may arise during the migration of saved objects, such as types defined by legacy applications.
+# Please note, using this feature carries a risk. Deleting saved objects during migration could potentially lead to unintended data loss. Use with caution.
+# migrations.delete.enabled: false
+# migrations.delete.types: []
+
+# Set the value to true to enable Ui Metric Collectors in Usage Collector
+# This publishes the Application Usage and UI Metrics into the saved object, which can be accessed by /api/stats?extended=true&legacy=true&exclude_usage=false
+# usageCollection.uiMetric.enabled: false
+
+# Set the value to true to enable enhancements for the data plugin
+# data.enhancements.enabled: false
+# Set the value to true to enable enhancements for the data plugin
+data.enhancements.enabled: true
+# # uiSettings:
+# #   overrides:o
+# #     "timepicker:quickRanges": []
+# opensearch_alerting.enabled: false
+# opensearch_security.enabled: false
+# ql_dashboards.enabled: false
+
+# opensearch.hosts: [https://localhost:9200]fea
+# opensearch.ssl.verificationMode: none
+# opensearch.username: kibanaserver
+# opensearch.password: kibanaserver
+# opensearch.requestHeadersWhitelist: [authorization, securitytenant]
+
+# opensearch_security.multitenancy.enabled: true
+# opensearch_security.multitenancy.tenants.preferred: [Private, Global]
+# opensearch_security.readonly_mode.roles: [kibana_read_only]
+# # Use this setting if you are running opensearch-dashboards without https
+# opensearch_security.cookie.secure: false
+
+

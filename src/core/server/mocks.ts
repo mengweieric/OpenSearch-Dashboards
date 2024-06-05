@@ -77,8 +77,10 @@ export function pluginInitializerContextConfigMock<T>(config: T) {
   const globalConfig: SharedGlobalConfig = {
     opensearchDashboards: {
       index: '.opensearch_dashboards_tests',
+      configIndex: '.opensearch_dashboards_config_tests',
       autocompleteTerminateAfter: duration(100000),
       autocompleteTimeout: duration(1000),
+      futureNavigation: false,
     },
     opensearch: {
       shardTimeout: duration('30s'),
@@ -88,6 +90,9 @@ export function pluginInitializerContextConfigMock<T>(config: T) {
     path: { data: '/tmp' },
     savedObjects: {
       maxImportPayloadBytes: new ByteSizeValue(26214400),
+      permission: {
+        enabled: true,
+      },
     },
   };
 
