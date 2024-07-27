@@ -175,7 +175,7 @@ export class PPLSearchInterceptor extends SearchInterceptor {
             updateDataFrameMeta({
               dataFrame: df,
               qs: newQuery,
-              aggConfig,
+              aggConfig: dataFrame.meta?.aggConfig,
               timeField,
               timeFilter,
               getAggQsFn: getAggQsFn.bind(this),

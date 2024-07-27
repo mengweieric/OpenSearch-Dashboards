@@ -22,12 +22,18 @@ import { QueryLanguageSelector } from './language_selector';
 import { QueryEditorExtensions } from './query_editor_extensions';
 import { QueryEditorBtnCollapse } from './query_editor_btn_collapse';
 import { SimpleDataSet } from '../../../common';
+import { getQueryService } from '../../services';
+import { SIMPLE_DATA_SET_TYPES } from '../../../common';
 
-const LANGUAGE_ID = 'SQL';
-monaco.languages.register({ id: LANGUAGE_ID });
+const LANGUAGE_ID_SQL = 'SQL';
+monaco.languages.register({ id: LANGUAGE_ID_SQL });
+
+const LANGUAGE_ID_KUERY = 'kuery';
+monaco.languages.register({ id: LANGUAGE_ID_KUERY });
 
 export interface QueryEditorProps {
   dataSet?: SimpleDataSet;
+  indexPatterns: Array<IIndexPattern | string>;
   query: Query;
   dataSetContainerRef?: React.RefCallback<HTMLDivElement>;
   settings: Settings;
@@ -42,7 +48,7 @@ export interface QueryEditorProps {
   onChange?: (query: Query, dateRange?: TimeRange) => void;
   onChangeQueryEditorFocus?: (isFocused: boolean) => void;
   onSubmit?: (query: Query, dateRange?: TimeRange) => void;
-  getQueryStringInitialValue?: (language: string) => string;
+  getQueryStringInitialValue?: (language: string, dataSetName?: string) => string;
   dataTestSubj?: string;
   size?: SuggestionsListSize;
   className?: string;
@@ -95,6 +101,8 @@ export default class QueryEditorUI extends Component<Props, State> {
   };
 
   public inputRef: monaco.editor.IStandaloneCodeEditor | null = null;
+
+  private queryService = getQueryService();
 
   private persistedLog: PersistedLog | undefined;
   private abortController?: AbortController;
@@ -238,6 +246,10 @@ export default class QueryEditorUI extends Component<Props, State> {
   }
 
   public componentDidUpdate(prevProps: Props) {
+    if (!isEqual(prevProps.indexPatterns, this.props.indexPatterns)) {
+      this.fetchIndexPatterns();
+    }
+
     const parsedQuery = fromUser(toUser(this.props.query.query));
     if (!isEqual(this.props.query.query, parsedQuery)) {
       this.onChange({ ...this.props.query, query: parsedQuery });
@@ -256,59 +268,65 @@ export default class QueryEditorUI extends Component<Props, State> {
     }
   };
 
-  getCodeEditorSuggestionsType = (columnType: string) => {
-    switch (columnType) {
-      case 'text':
-        return monaco.languages.CompletionItemKind.Text;
-      case 'function':
-        return monaco.languages.CompletionItemKind.Function;
-      case 'object':
-        return monaco.languages.CompletionItemKind.Struct;
-      case 'field':
-        return monaco.languages.CompletionItemKind.Field;
-      case 'value':
-        return monaco.languages.CompletionItemKind.Value;
-      default:
-        return monaco.languages.CompletionItemKind.Text;
-    }
+  private fetchIndexPatterns = async () => {
+    const client = this.services.savedObjects.client;
+    const dataSet = this.queryService.dataSet.getDataSet();
+    const title = dataSet?.title;
+
+    const resp = await client.find({
+      type: 'index-pattern',
+      fields: ['title', 'timeFieldName', 'fields'],
+      search: `${title}*`,
+      searchFields: ['title'],
+      perPage: 100,
+    });
+
+    return resp.savedObjects.map((savedObject: any) => ({
+      id: savedObject.id,
+      title: savedObject.attributes?.title,
+      timeFieldName: savedObject.attributes?.timeFieldName,
+      fields: JSON.parse(savedObject.attributes?.fields),
+      type: SIMPLE_DATA_SET_TYPES.INDEX_PATTERN,
+    }));
   };
 
-  // provideCompletionItems = async (
-  //   model: monaco.editor.ITextModel,
-  //   position: monaco.Position
-  // ): Promise<monaco.languages.CompletionList> => {
-  //   const wordUntil = model.getWordUntilPosition(position);
-  //   const wordRange = new monaco.Range(
-  //     position.lineNumber,
-  //     wordUntil.startColumn,
-  //     position.lineNumber,
-  //     wordUntil.endColumn
-  //   );
-  //   const enhancements = this.props.settings.getQueryEnhancements(this.props.query.language);
-  //   const connectionService = enhancements?.connectionService;
-  //   const suggestions = await this.services.data.autocomplete.getQuerySuggestions({
-  //     query: this.getQueryString(),
-  //     selectionStart: model.getOffsetAt(position),
-  //     selectionEnd: model.getOffsetAt(position),
-  //     language: this.props.query.language,
-  //     indexPatterns: this.state.indexPatterns,
-  //     position,
-  //     connectionService,
-  //   });
+  provideCompletionItems = async (
+    model: monaco.editor.ITextModel,
+    position: monaco.Position
+  ): Promise<monaco.languages.CompletionList> => {
+    const wordUntil = model.getWordUntilPosition(position);
+    const wordRange = new monaco.Range(
+      position.lineNumber,
+      wordUntil.startColumn,
+      position.lineNumber,
+      wordUntil.endColumn
+    );
 
-  //   return {
-  //     suggestions:
-  //       suggestions && suggestions.length > 0
-  //         ? suggestions.map((s) => ({
-  //             label: s.text,
-  //             kind: this.getCodeEditorSuggestionsType(s.type),
-  //             insertText: s.text,
-  //             range: wordRange,
-  //           }))
-  //         : [],
-  //     incomplete: false,
-  //   };
-  // };
+    const indexPatterns = await this.fetchIndexPatterns();
+
+    const suggestions = await this.services.data.autocomplete.getQuerySuggestions({
+      query: this.getQueryString(),
+      selectionStart: model.getOffsetAt(position),
+      selectionEnd: model.getOffsetAt(position),
+      language: this.props.query.language,
+      indexPatterns,
+      position,
+      services: this.services,
+    });
+
+    return {
+      suggestions:
+        suggestions && suggestions.length > 0
+          ? suggestions.map((s: QuerySuggestion) => ({
+              label: s.text,
+              kind: s.type as monaco.languages.CompletionItemKind,
+              insertText: s.text,
+              range: wordRange,
+            }))
+          : [],
+      incomplete: false,
+    };
+  };
 
   editorDidMount = (editor: monaco.editor.IStandaloneCodeEditor) => {
     this.setState({ lineCount: editor.getModel()?.getLineCount() });
@@ -434,9 +452,22 @@ export default class QueryEditorUI extends Component<Props, State> {
                             cursorStyle: 'line',
                             wordBasedSuggestions: false,
                           }}
-                          // suggestionProvider={{
-                          //   provideCompletionItems: this.provideCompletionItems,
-                          // }}
+                          suggestionProvider={{
+                            provideCompletionItems: this.provideCompletionItems,
+                          }}
+                          languageConfiguration={{
+                            language: LANGUAGE_ID_KUERY,
+                            autoClosingPairs: [
+                              {
+                                open: '(',
+                                close: ')',
+                              },
+                              {
+                                open: '"',
+                                close: '"',
+                              },
+                            ],
+                          }}
                         />
                       </div>
                     </EuiFlexItem>
@@ -487,9 +518,22 @@ export default class QueryEditorUI extends Component<Props, State> {
                   lineNumbersMinChars: 2,
                   wordBasedSuggestions: false,
                 }}
-                // suggestionProvider={{
-                //   provideCompletionItems: this.provideCompletionItems,
-                // }}
+                suggestionProvider={{
+                  provideCompletionItems: this.provideCompletionItems,
+                }}
+                languageConfiguration={{
+                  language: LANGUAGE_ID_KUERY,
+                  autoClosingPairs: [
+                    {
+                      open: '(',
+                      close: ')',
+                    },
+                    {
+                      open: '"',
+                      close: '"',
+                    },
+                  ],
+                }}
               />
             )}
 
