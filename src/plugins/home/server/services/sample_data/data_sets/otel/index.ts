@@ -55,6 +55,7 @@ export const otelSpecProvider = function (): SampleDatasetSchema {
         currentTimeMarker: '2024-10-16T19:00:01',
         preserveDayOfWeekTimeOfDay: false,
         customPrefix: 'otel-v1-apm-span',
+        shouldTranslateTimeRelativeToToday: true,
       },
       {
         id: 'map',
@@ -64,6 +65,7 @@ export const otelSpecProvider = function (): SampleDatasetSchema {
         currentTimeMarker: '2024-10-16T19:00:01',
         preserveDayOfWeekTimeOfDay: false,
         customPrefix: 'otel-v1-apm-service',
+        shouldTranslateTimeRelativeToToday: true,
       },
       {
         id: '2024.10.16',
@@ -73,6 +75,7 @@ export const otelSpecProvider = function (): SampleDatasetSchema {
         currentTimeMarker: '2024-10-16T19:00:01',
         preserveDayOfWeekTimeOfDay: false,
         customPrefix: 'ss4o_metrics-otel',
+        shouldTranslateTimeRelativeToToday: true,
       },
       {
         id: '2024.10.16',
@@ -82,6 +85,7 @@ export const otelSpecProvider = function (): SampleDatasetSchema {
         currentTimeMarker: '2024-10-16T19:00:01',
         preserveDayOfWeekTimeOfDay: false,
         customPrefix: 'otel-events',
+        shouldTranslateTimeRelativeToToday: true,
       },
     ],
     status: 'not_installed',

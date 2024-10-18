@@ -39,6 +39,7 @@ import {
   dateToIso8601IgnoringTime,
   translateTimeRelativeToDifference,
   translateTimeRelativeToWeek,
+  translateTimeRelativeToToday,
 } from '../lib/translate_timestamp';
 import { SampleDataUsageTracker } from '../usage/usage';
 
@@ -90,13 +91,22 @@ const insertDataIntoIndex = (
       .filter((timeFieldName: string) => getNestedField(doc, timeFieldName))
       .forEach((timeFieldName: string) => {
         const timeValue = getNestedField(doc, timeFieldName);
-        const updatedTime = dataIndexConfig.preserveDayOfWeekTimeOfDay
-          ? translateTimeRelativeToWeek(timeValue, dataIndexConfig.currentTimeMarker, nowReference)
-          : translateTimeRelativeToDifference(
-              timeValue,
-              dataIndexConfig.currentTimeMarker,
-              nowReference
-            );
+        let updatedTime = '';
+        if (dataIndexConfig.shouldTranslateTimeRelativeToToday) {
+          updatedTime = translateTimeRelativeToToday(timeValue, dataIndexConfig.currentTimeMarker);
+        } else {
+          updatedTime = dataIndexConfig.preserveDayOfWeekTimeOfDay
+            ? translateTimeRelativeToWeek(
+                timeValue,
+                dataIndexConfig.currentTimeMarker,
+                nowReference
+              )
+            : translateTimeRelativeToDifference(
+                timeValue,
+                dataIndexConfig.currentTimeMarker,
+                nowReference
+              );
+        }
         setNestedField(doc, timeFieldName, updatedTime);
       });
     return doc;

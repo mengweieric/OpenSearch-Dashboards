@@ -91,3 +91,21 @@ export function translateTimeRelativeToWeek(
 
   return translateTimeRelativeToDifference(source, sourceReference, normalizedTargetReference);
 }
+
+export function calculateTimeDeltaAsDateMs(pastDate: string | Date): number {
+  const now = new Date();
+  const past = new Date(pastDate);
+
+  if (isNaN(past.getTime())) {
+    throw new Error('Invalid date format'); // Handle invalid date parsing
+  }
+
+  // Calculate the difference in milliseconds
+  return now.getTime() - past.getTime();
+}
+
+export function translateTimeRelativeToToday(source: string, sourceReference: string) {
+  return new Date(
+    new Date(source).getTime() + calculateTimeDeltaAsDateMs(sourceReference)
+  ).toISOString();
+}

@@ -75,6 +75,9 @@ export interface DataIndexSchema {
   // Optional custom prefix added to the index name
   // Replaces the default custom_prefix of `opensearch_dashboards_sample_data_`
   customPrefix?: string;
+
+  // timestamp values will be translated relative to the current time
+  shouldTranslateTimeRelativeToToday?: boolean;
 }
 
 export interface AppLinkSchema {
